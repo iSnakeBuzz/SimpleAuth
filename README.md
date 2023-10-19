@@ -51,7 +51,7 @@ If you wish to build SimpleAuth yourself, follow these steps:
 3. Run the following command:
 
 ```bash
-./gradlew build
+./gradlew shadowJar
 ```
 
 The built `.jar` will be available in `build/libs/`.
