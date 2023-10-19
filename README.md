@@ -35,7 +35,6 @@ A sample configuration can be found in `plugins/SimpleAuth/config.yml`. Here are
 ```yml
 language: 'en' # Language to use for messages
 settings:
-  password-hash: 'bcrypt' # Hashing algorithm for passwords
   registration-timeout: 60 # Time in seconds before a non-registered player is kicked
   login-timeout: 60 # Time in seconds before a non-logged in player is kicked
   premium-bypass: true # Allow premium players to bypass authentication
