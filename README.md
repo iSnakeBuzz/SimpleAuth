@@ -12,7 +12,7 @@ SimpleAuth is a lightweight and effective authentication plugin for the Velocity
 
 ## Requirements
 
-- Velocity 1.x
+- Velocity 3.x
 - Java 11 or later
 
 ## Installation
