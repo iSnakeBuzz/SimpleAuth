@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'eclipse'
     id "org.jetbrains.gradle.plugin.idea-ext" version "1.0.1"
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 group = 'rip.snake'
@@ -18,6 +19,21 @@ repositories {
 dependencies {
     compileOnly "com.velocitypowered:velocity-api:3.2.0-SNAPSHOT"
     annotationProcessor "com.velocitypowered:velocity-api:3.2.0-SNAPSHOT"
+
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.30'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
+
+    implementation "dev.dejvokep:boosted-yaml:1.3"
+}
+
+// Output to build/libs/shadow.jar
+shadowJar {
+    archiveClassifier.set("")
+    archiveBaseName.set("${project.name}")
+    archiveVersion.set("${project.version}")
 }
 
 def targetJavaVersion = 11
