@@ -1,5 +1,7 @@
 package rip.snake.simpleauth.managers;
 
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
@@ -8,8 +10,11 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.IndexOptions;
 import com.mongodb.client.model.Indexes;
 import dev.dejvokep.boostedyaml.route.Route;
+import org.bson.codecs.configuration.CodecRegistries;
+import org.bson.codecs.configuration.CodecRegistry;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import rip.snake.simpleauth.SimpleAuth;
+import rip.snake.simpleauth.codecs.AuthPlayerCodec;
 import rip.snake.simpleauth.player.AuthPlayer;
 
 import java.util.Optional;
@@ -33,8 +38,20 @@ public class MongoManager {
         String uri = simpleAuth.getConfig().getString(Route.from("mongo", "uri"), "mongodb://localhost:27017");
         String database = simpleAuth.getConfig().getString(Route.from("mongo", "database"), "simple-auth");
 
+        simpleAuth.getLogger().info("Connecting to MongoDB...");
+
         try {
-            this.mongoClient = MongoClients.create(uri);
+            CodecRegistry codecRegistry = CodecRegistries.fromRegistries(
+                    MongoClientSettings.getDefaultCodecRegistry(),
+                    CodecRegistries.fromCodecs(new AuthPlayerCodec())
+            );
+
+            MongoClientSettings settings = MongoClientSettings.builder()
+                    .codecRegistry(codecRegistry)
+                    .applyConnectionString(new ConnectionString(uri))
+                    .build();
+
+            this.mongoClient = MongoClients.create(settings);
             this.simpleAuthDatabase = mongoClient.getDatabase(database);
             this.authPlayerCollection = simpleAuthDatabase.getCollection("auth-players", AuthPlayer.class);
         } catch (Exception e) {
