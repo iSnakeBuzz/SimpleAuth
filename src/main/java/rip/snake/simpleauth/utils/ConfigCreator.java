@@ -20,6 +20,7 @@ public class ConfigCreator {
     private final Path pluginFolder;
 
     private YamlDocument config;
+    private YamlDocument messages;
 
     public ConfigCreator(Path pluginFolder) {
         this.pluginFolder = pluginFolder;
@@ -37,8 +38,20 @@ public class ConfigCreator {
                     UpdaterSettings.builder().setVersioning(new BasicVersioning("file-version")).setOptionSorting(UpdaterSettings.OptionSorting.SORT_BY_DEFAULTS).build()
             );
 
+            messages = YamlDocument.create(
+                    pluginFolder.resolve("messages.yml").toFile(),
+                    Objects.requireNonNull(getClass().getResourceAsStream("/messages.yml"), "Could not find messages.yml in the jar!"),
+                    GeneralSettings.DEFAULT,
+                    LoaderSettings.builder().setAutoUpdate(true).build(),
+                    DumperSettings.DEFAULT,
+                    UpdaterSettings.builder().setVersioning(new BasicVersioning("file-version")).setOptionSorting(UpdaterSettings.OptionSorting.SORT_BY_DEFAULTS).build()
+            );
+
             config.update();
             config.save();
+
+            messages.update();
+            messages.save();
         } catch (IOException e) {
             e.printStackTrace();
         }
