@@ -1,6 +1,7 @@
 package rip.snake.simpleauth.managers;
 
 import com.google.common.collect.Sets;
+import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import dev.dejvokep.boostedyaml.route.Route;
 import rip.snake.simpleauth.SimpleAuth;
@@ -56,4 +57,7 @@ public class ServersManager {
         return this.simpleAuth.getProxyServer().getServer(server);
     }
 
+    public void sendLobby(Player player) {
+        this.getLobbyServer().ifPresent(server -> player.createConnectionRequest(server).fireAndForget());
+    }
 }
