@@ -6,3 +6,12 @@ messages:
   not-registered: <red>You are not registered! Please register using <yellow>/register <password> <password>
   register-usage: '<red>Usage: <yellow>/register <password> <password>'
   login-usage: '<red>Usage: <yellow>/login <password>'
+  registering: <yellow>Registering...
+  logging-in: <yellow>Logging in...
+  login-failed: <red>Login failed!
+  login-success: <green>Successfully logged in!
+  passwords-not-match: <red>Passwords do not match!
+  register-success: <green>Successfully registered!
+  too-many-attempts: <red>You have attempted to login too many times!
+  already-logged-in: <red>You are already logged in!
+  already-registered: <red>You are already registered!
