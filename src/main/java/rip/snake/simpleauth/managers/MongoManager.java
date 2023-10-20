@@ -9,6 +9,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.IndexOptions;
 import com.mongodb.client.model.Indexes;
+import com.mongodb.client.model.ReplaceOptions;
 import dev.dejvokep.boostedyaml.route.Route;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -72,10 +73,11 @@ public class MongoManager {
         mongoClient.close();
     }
 
-    public void createPlayer(AuthPlayer authPlayer) {
+    public void createPlayerOrUpdate(AuthPlayer authPlayer) {
         if (authPlayerCollection == null) return;
         PlayerManager.PUT_PLAYER(authPlayer.getUniqueId(), authPlayer);
-        authPlayerCollection.insertOne(authPlayer);
+
+        authPlayerCollection.replaceOne(Filters.eq("uniqueId", authPlayer.getRawUniqueId()), authPlayer, new ReplaceOptions().upsert(true));
     }
 
     public Optional<AuthPlayer> fetchUsername(String username) {
