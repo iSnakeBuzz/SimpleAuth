@@ -3,8 +3,6 @@ package rip.snake.simpleauth.listeners;
 import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
-import com.velocitypowered.api.event.connection.LoginEvent;
-import com.velocitypowered.api.event.connection.PostLoginEvent;
 import com.velocitypowered.api.event.connection.PreLoginEvent;
 import lombok.AllArgsConstructor;
 import rip.snake.simpleauth.SimpleAuth;
@@ -30,6 +28,9 @@ public class ConnectionListener {
 
         // If the player is present in the database verify that the player is premium.
         if (authPlayer.isPresent()) {
+            // Mark the player as registered.
+            tPlayer.registered();
+
             // If the player is premium, we can just return here.
             if (authPlayer.get().isPremium()) {
                 tPlayer.loggedIn();
