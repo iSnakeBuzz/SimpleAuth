@@ -38,7 +38,7 @@ public class ChatListener {
         Player player = (Player) event.getCommandSource();
         TPlayer tPlayer = PlayerManager.GET_TMP_PLAYER(player.getUsername());
 
-        if (tPlayer.isNeedAuth() && tPlayer.isLoggedIn()) {
+        if (tPlayer.isNeedAuth() && !tPlayer.isLoggedIn()) {
             return;
         }
 
