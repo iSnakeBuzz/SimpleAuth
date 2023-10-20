@@ -50,6 +50,9 @@ public class ConnectionListener {
         if (uuid.isPresent()) {
             // Get the AuthPlayer from the database in case the player has logged in before with a different username with the same UUID.
             simpleAuth.getMongoManager().fetchUniqueId(uuid.get()).ifPresent(aPlayer -> {
+                // Mark the player as registered.
+                tPlayer.registered();
+
                 // If the player is premium, we can just return here.
                 if (aPlayer.isPremium()) {
                     tPlayer.loggedIn();
