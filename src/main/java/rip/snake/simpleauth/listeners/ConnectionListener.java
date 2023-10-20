@@ -49,12 +49,14 @@ public class ConnectionListener {
         // Verify that the UUID is present.
         if (uuid.isPresent()) {
             // Get the AuthPlayer from the database in case the player has logged in before with a different username with the same UUID.
-            simpleAuth.getMongoManager().fetchUniqueId(uuid.get()).ifPresent(aPlayer -> {
+            Optional<AuthPlayer> premiumPlayer = simpleAuth.getMongoManager().fetchUniqueId(uuid.get());
+
+            if (premiumPlayer.isPresent()) {
                 // Mark the player as registered.
                 tPlayer.setRegistered(true);
 
                 // If the player is premium, we can just return here.
-                if (aPlayer.isPremium()) {
+                if (premiumPlayer.get().isPremium()) {
                     tPlayer.setLoggedIn(true);
                     return;
                 }
@@ -62,7 +64,20 @@ public class ConnectionListener {
                 // If the player is not premium, we can set the player to need auth and return.
                 tPlayer.setNeedAuth(true);
                 event.setResult(PreLoginEvent.PreLoginComponentResult.forceOfflineMode());
-            });
+                return;
+            }
+
+            // Saving the player to the database.
+            simpleAuth.getMongoManager().createPlayer(new AuthPlayer(
+                    uuid.get().toString(),
+                    username,
+                    "none",
+                    event.getConnection().getRemoteAddress().getHostName(),
+                    System.currentTimeMillis(),
+                    "none",
+                    true
+            ));
+
             return;
         }
 
