@@ -1,12 +1,20 @@
 package rip.snake.simpleauth;
 
 import com.google.inject.Inject;
-import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.Subscribe;
+import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
+import dev.dejvokep.boostedyaml.YamlDocument;
+import lombok.Getter;
 import org.slf4j.Logger;
+import rip.snake.simpleauth.listeners.ChatListener;
+import rip.snake.simpleauth.listeners.ConnectionListener;
+import rip.snake.simpleauth.listeners.ServerListener;
+import rip.snake.simpleauth.managers.MongoManager;
+import rip.snake.simpleauth.managers.ServersManager;
+import rip.snake.simpleauth.utils.ConfigCreator;
 
 import java.nio.file.Path;
 
@@ -18,17 +26,40 @@ import java.nio.file.Path;
         url = "https://github.com/iSnakeBuzz/SimpleAuth",
         description = "A simple authentication plugin for Velocity."
 )
+@Getter
 public class SimpleAuth {
 
-    @Inject
-    private Logger logger;
+    private final ProxyServer proxyServer;
+    private final Logger logger;
+
+    private final ConfigCreator configCreator;
+    private final ServersManager serversManager;
+    private final MongoManager mongoManager;
 
     @Inject
     public SimpleAuth(ProxyServer server, Logger logger, @DataDirectory Path pluginData) {
+        this.proxyServer = server;
         this.logger = logger;
+        this.configCreator = new ConfigCreator(pluginData);
+        this.serversManager = new ServersManager(this);
+        this.mongoManager = new MongoManager(this);
     }
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
+        logger.info("Loading SimpleAuth...");
+
+        this.configCreator.createConfig();
+        this.serversManager.loadServers();
+
+        // Registering listeners
+        proxyServer.getEventManager().register(this, new ChatListener(this));
+        proxyServer.getEventManager().register(this, new ServerListener(this));
+        proxyServer.getEventManager().register(this, new ConnectionListener(this));
     }
+
+    public YamlDocument getConfig() {
+        return configCreator.getConfig();
+    }
+
 }
