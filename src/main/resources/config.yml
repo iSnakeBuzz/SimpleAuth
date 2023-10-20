@@ -12,6 +12,6 @@ servers:
     - 'lobby-1'
 
 # MongoDB database connection
-mongodb:
+mongo:
   uri: 'mongodb://localhost:27017'
   database: 'simple-auth'
