@@ -64,7 +64,7 @@ public class RegisterCommand implements SimpleCommand {
                 false
         );
 
-        simpleAuth.getMongoManager().createPlayer(authPlayer);
+        simpleAuth.getMongoManager().createPlayerOrUpdate(authPlayer);
         tPlayer.setLoggedIn(true);
         tPlayer.setRegistered(true);
 
