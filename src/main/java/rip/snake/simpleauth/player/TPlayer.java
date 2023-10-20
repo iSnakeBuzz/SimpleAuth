@@ -12,6 +12,7 @@ public class TPlayer {
 
     private boolean needAuth;
     private boolean loggedIn;
+    private boolean registered;
 
     private RegisteredServer server;
 
@@ -21,6 +22,10 @@ public class TPlayer {
 
     public void loggedIn() {
         this.loggedIn = true;
+    }
+
+    public void registered() {
+        this.registered = true;
     }
 
     public void setServer(RegisteredServer server) {
