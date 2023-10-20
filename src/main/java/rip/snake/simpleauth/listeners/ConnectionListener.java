@@ -27,21 +27,7 @@ public class ConnectionListener {
         TPlayer tPlayer = PlayerManager.GET_TMP_PLAYER(username);
 
         // If the player is present in the database verify that the player is premium.
-        if (authPlayer.isPresent()) {
-            // Mark the player as registered.
-            tPlayer.setRegistered(true);
-
-            // If the player is premium, we can just return here.
-            if (authPlayer.get().isPremium()) {
-                tPlayer.setLoggedIn(true);
-                return;
-            }
-
-            // If the player is not premium, we can set the player to need auth.
-            tPlayer.setNeedAuth(true);
-            event.setResult(PreLoginEvent.PreLoginComponentResult.forceOfflineMode());
-            return;
-        }
+        if (processAuth(event, tPlayer, authPlayer.orElse(null))) return;
 
         // Fetch the UUID from Mojang. Rate limits apply.
         Optional<UUID> uuid = MojangAPI.fetchUsername(username);
@@ -51,24 +37,8 @@ public class ConnectionListener {
             // Get the AuthPlayer from the database in case the player has logged in before with a different username with the same UUID.
             Optional<AuthPlayer> premiumPlayer = simpleAuth.getMongoManager().fetchUniqueId(uuid.get());
 
-            if (premiumPlayer.isPresent()) {
-                // Mark the player as registered.
-                tPlayer.setRegistered(true);
-
-                // If the player is premium, we can just return here.
-                if (premiumPlayer.get().isPremium()) {
-                    tPlayer.setLoggedIn(true);
-                    return;
-                }
-
-                // If the player is not premium, we can set the player to need auth and return.
-                tPlayer.setNeedAuth(true);
-                event.setResult(PreLoginEvent.PreLoginComponentResult.forceOfflineMode());
-                return;
-            }
-
             // Saving the player to the database.
-            simpleAuth.getMongoManager().createPlayer(new AuthPlayer(
+            simpleAuth.getMongoManager().createPlayerOrUpdate(new AuthPlayer(
                     uuid.get().toString(),
                     username,
                     "none",
@@ -78,12 +48,31 @@ public class ConnectionListener {
                     true
             ));
 
+            if (processAuth(event, tPlayer, premiumPlayer.orElse(null))) return;
             return;
         }
 
         // If the UUID is not present, the player is not premium, needs auth.
         tPlayer.setNeedAuth(true);
         event.setResult(PreLoginEvent.PreLoginComponentResult.forceOfflineMode());
+    }
+
+    private boolean processAuth(PreLoginEvent event, TPlayer tPlayer, AuthPlayer authPlayer) {
+        if (authPlayer == null) return false;
+
+        // Mark the player as registered.
+        tPlayer.setRegistered(true);
+
+        // If the player is premium, we can just return here.
+        if (authPlayer.isPremium()) {
+            tPlayer.setLoggedIn(true);
+            return true;
+        }
+
+        // If the player is not premium, we can set the player to need auth and return.
+        tPlayer.setNeedAuth(true);
+        event.setResult(PreLoginEvent.PreLoginComponentResult.forceOfflineMode());
+        return true;
     }
 
     @Subscribe
