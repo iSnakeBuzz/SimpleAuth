@@ -6,12 +6,15 @@ import dev.dejvokep.boostedyaml.settings.dumper.DumperSettings;
 import dev.dejvokep.boostedyaml.settings.general.GeneralSettings;
 import dev.dejvokep.boostedyaml.settings.loader.LoaderSettings;
 import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
+import lombok.Cleanup;
+import lombok.Getter;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.Objects;
 
+@Getter
 public class ConfigCreator {
 
     private final Path pluginFolder;
@@ -22,8 +25,9 @@ public class ConfigCreator {
         this.pluginFolder = pluginFolder;
     }
 
-    public void createConfig() throws IOException {
-        try (InputStream resourceAsStream = getClass().getResourceAsStream("/config.yml")) {
+    public void createConfig() {
+        try {
+            @Cleanup InputStream resourceAsStream = getClass().getResourceAsStream("/config.yml");
             config = YamlDocument.create(
                     pluginFolder.resolve("config.yml").toFile(),
                     Objects.requireNonNull(resourceAsStream, "Could not find config.yml in the jar!"),
@@ -35,6 +39,8 @@ public class ConfigCreator {
 
             config.update();
             config.save();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
