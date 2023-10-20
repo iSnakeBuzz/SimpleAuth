@@ -2,10 +2,10 @@ package rip.snake.simpleauth.player;
 
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 
 @AllArgsConstructor
-@Getter
+@Data
 public class TPlayer {
 
     private final String username;
@@ -13,23 +13,12 @@ public class TPlayer {
     private boolean needAuth;
     private boolean loggedIn;
     private boolean registered;
+    private int attempts;
 
     private RegisteredServer server;
 
-    public void needsAuth() {
-        this.needAuth = true;
-    }
-
-    public void loggedIn() {
-        this.loggedIn = true;
-    }
-
-    public void registered() {
-        this.registered = true;
-    }
-
-    public void setServer(RegisteredServer server) {
-        this.server = server;
+    public boolean attempt() {
+        return attempts++ >= 3;
     }
 
 }
