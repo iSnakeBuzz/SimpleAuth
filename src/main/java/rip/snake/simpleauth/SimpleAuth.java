@@ -62,4 +62,8 @@ public class SimpleAuth {
         return configCreator.getConfig();
     }
 
+    public YamlDocument getMessages() {
+        return configCreator.getMessages();
+    }
+
 }
