@@ -21,9 +21,10 @@ public class ChatListener {
         if (tPlayer.isNeedAuth() && !tPlayer.isLoggedIn()) {
             event.setResult(PlayerChatEvent.ChatResult.denied());
 
-            event.getPlayer().sendMessage(MiniMessage.miniMessage().deserialize(
-                    simpleAuth.getMessages().getString("messages.not-logged-in", "<red>You are not logged in! Please login using <yellow>/login <password>"))
-            );
+            event.getPlayer().sendMessage(MiniMessage.miniMessage().deserialize(simpleAuth.getMessages().getString(
+                    tPlayer.isRegistered() ? "messages.not-logged-in" : "messages.not-registered",
+                    "<red>You are not logged in!"
+            )));
         }
     }
 
