@@ -16,7 +16,7 @@ public class AuthPlayer {
     private final String last_ip;
     private final long last_login;
 
-    private String hashed_password;
+    private String hashedPassword;
     private boolean isPremium;
 
     public UUID getUniqueId() {
