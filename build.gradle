@@ -28,10 +28,15 @@ dependencies {
 
     implementation "dev.dejvokep:boosted-yaml:1.3"
     implementation "at.favre.lib:bcrypt:0.10.2"
+    implementation 'org.mongodb:mongodb-driver-sync:4.11.0'
 }
 
 // Output to build/libs/shadow.jar
 shadowJar {
+    relocate 'dev.dejvokep.boostedyaml', 'rip.snake.simpleauth.libs.boostedyaml'
+    relocate 'at.favre.lib', 'rip.snake.simpleauth.libs.bcrypt'
+    relocate 'org.mongodb', 'rip.snake.simpleauth.libs.mongodb'
+
     archiveClassifier.set("")
     archiveBaseName.set("${project.name}")
     archiveVersion.set("${project.version}")
