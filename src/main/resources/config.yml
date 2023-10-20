@@ -1,11 +1,9 @@
 file-version: 1
-language: 'en' # Language to use for messages
 
 settings:
   registration-timeout: 60 # Time in seconds before a non-registered player is kicked
   login-timeout: 60 # Time in seconds before a non-logged in player is kicked
-  premium-bypass: true # Allow premium players to bypass authentication
-  premium-command: false # Allow premium users that have signed-in to bypass authentication after executing /premium (This command is disabled if premium-bypass is enabled)
+  premium-bypass: true # Allow premium players to bypass authentication - If false, all players must authenticate, premiums have /premium command
 
 servers:
   auth_servers:
@@ -14,4 +12,6 @@ servers:
     - 'lobby-1'
 
 # MongoDB database connection
-mongodb-uri: 'mongodb://localhost:27017'
+mongodb:
+  uri: 'mongodb://localhost:27017'
+  database: 'simple-auth'
