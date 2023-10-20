@@ -33,7 +33,6 @@ SimpleAuth is a lightweight and effective authentication plugin for the Velocity
 A sample configuration can be found in `plugins/SimpleAuth/config.yml`. Here are the primary options:
 
 ```yml
-language: 'en' # Language to use for messages
 settings:
   registration-timeout: 60 # Time in seconds before a non-registered player is kicked
   login-timeout: 60 # Time in seconds before a non-logged in player is kicked
