@@ -28,7 +28,7 @@ public class PlayerManager {
     }
 
     public static TPlayer GET_TMP_PLAYER(String username) {
-        return TMP_PLAYERS.computeIfAbsent(username, s -> new TPlayer(username, false, false, null));
+        return TMP_PLAYERS.computeIfAbsent(username, s -> new TPlayer(username, false, false, false, null));
     }
 
 }
