@@ -23,4 +23,8 @@ public class AuthPlayer {
         return UUID.fromString(uniqueId);
     }
 
+    public String getRawUniqueId() {
+        return uniqueId;
+    }
+
 }
