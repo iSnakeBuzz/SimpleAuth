@@ -4,6 +4,7 @@ import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.command.CommandExecuteEvent;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
 import lombok.AllArgsConstructor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import rip.snake.simpleauth.SimpleAuth;
 import rip.snake.simpleauth.managers.PlayerManager;
 import rip.snake.simpleauth.player.TPlayer;
@@ -19,6 +20,10 @@ public class ChatListener {
 
         if (tPlayer.isNeedAuth() && !tPlayer.isLoggedIn()) {
             event.setResult(PlayerChatEvent.ChatResult.denied());
+
+            event.getPlayer().sendMessage(MiniMessage.miniMessage().deserialize(
+                    simpleAuth.getMessages().getString("messages.not-logged-in", "<red>You are not logged in! Please login using <yellow>/login <password>"))
+            );
         }
     }
 

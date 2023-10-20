@@ -5,6 +5,7 @@ import com.velocitypowered.api.event.player.PlayerChooseInitialServerEvent;
 import com.velocitypowered.api.event.player.ServerPreConnectEvent;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import lombok.AllArgsConstructor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import rip.snake.simpleauth.SimpleAuth;
 import rip.snake.simpleauth.managers.PlayerManager;
 import rip.snake.simpleauth.player.TPlayer;
@@ -60,6 +61,9 @@ public class ServerListener {
                 return;
             }
 
+            event.getPlayer().sendMessage(MiniMessage.miniMessage().deserialize(
+                    simpleAuth.getMessages().getString("messages.not-logged-in", "<red>You are not logged in! Please login using <yellow>/login <password>"))
+            );
             event.setResult(ServerPreConnectEvent.ServerResult.denied());
         }
     }
