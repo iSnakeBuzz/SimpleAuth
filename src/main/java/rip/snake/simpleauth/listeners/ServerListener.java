@@ -2,6 +2,7 @@ package rip.snake.simpleauth.listeners;
 
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.player.PlayerChooseInitialServerEvent;
+import com.velocitypowered.api.event.player.ServerConnectedEvent;
 import com.velocitypowered.api.event.player.ServerPreConnectEvent;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import lombok.AllArgsConstructor;
@@ -40,6 +41,19 @@ public class ServerListener {
             }
 
             event.setInitialServer(lobbyServer.get());
+        }
+    }
+
+    @Subscribe
+    public void onPostConnect(ServerConnectedEvent event) {
+        TPlayer tPlayer = PlayerManager.GET_TMP_PLAYER(event.getPlayer().getUsername());
+        simpleAuth.getLogger().info("ServerConnectedEvent: " + tPlayer.getUsername() + " " + tPlayer.isNeedAuth() + " " + tPlayer.isLoggedIn());
+
+        if (tPlayer.isNeedAuth() && !tPlayer.isLoggedIn()) {
+            event.getPlayer().sendMessage(MiniMessage.miniMessage().deserialize(simpleAuth.getMessages().getString(
+                    tPlayer.isRegistered() ? "messages.not-logged-in" : "messages.not-registered",
+                    "<red>You are not logged in!"
+            )));
         }
     }
 
