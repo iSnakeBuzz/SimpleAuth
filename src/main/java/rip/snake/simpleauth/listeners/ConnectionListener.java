@@ -48,7 +48,8 @@ public class ConnectionListener {
                     true
             ));
 
-            if (processAuth(event, tPlayer, premiumPlayer.orElse(null))) return;
+            processAuth(event, tPlayer, premiumPlayer.orElse(null));
+
             return;
         }
 
