@@ -3,6 +3,7 @@ package rip.snake.simpleauth.listeners;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.command.CommandExecuteEvent;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
+import com.velocitypowered.api.proxy.Player;
 import lombok.AllArgsConstructor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import rip.snake.simpleauth.SimpleAuth;
@@ -30,7 +31,24 @@ public class ChatListener {
 
     @Subscribe
     public void onCommandExecute(CommandExecuteEvent event) {
-        simpleAuth.getLogger().info(event.toString());
+        if (!(event.getCommandSource() instanceof Player)) {
+            return;
+        }
+
+        Player player = (Player) event.getCommandSource();
+        TPlayer tPlayer = PlayerManager.GET_TMP_PLAYER(player.getUsername());
+
+        if (tPlayer.isNeedAuth() && tPlayer.isLoggedIn()) {
+            return;
+        }
+
+        String command = event.getCommand().toLowerCase();
+
+        if (command.startsWith("login") || command.startsWith("register")) {
+            return;
+        }
+
+        event.setResult(CommandExecuteEvent.CommandResult.denied());
     }
 
 }
