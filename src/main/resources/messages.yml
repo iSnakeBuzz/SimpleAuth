@@ -1,0 +1,3 @@
+file-version: 1
+messages:
+  not-logged-in: <red>You are not logged in! Please login using <yellow>/login <password>
