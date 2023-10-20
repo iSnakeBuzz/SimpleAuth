@@ -29,16 +29,16 @@ public class ConnectionListener {
         // If the player is present in the database verify that the player is premium.
         if (authPlayer.isPresent()) {
             // Mark the player as registered.
-            tPlayer.registered();
+            tPlayer.setRegistered(true);
 
             // If the player is premium, we can just return here.
             if (authPlayer.get().isPremium()) {
-                tPlayer.loggedIn();
+                tPlayer.setLoggedIn(true);
                 return;
             }
 
             // If the player is not premium, we can set the player to need auth.
-            tPlayer.needsAuth();
+            tPlayer.setNeedAuth(true);
             event.setResult(PreLoginEvent.PreLoginComponentResult.forceOfflineMode());
             return;
         }
@@ -51,23 +51,23 @@ public class ConnectionListener {
             // Get the AuthPlayer from the database in case the player has logged in before with a different username with the same UUID.
             simpleAuth.getMongoManager().fetchUniqueId(uuid.get()).ifPresent(aPlayer -> {
                 // Mark the player as registered.
-                tPlayer.registered();
+                tPlayer.setRegistered(true);
 
                 // If the player is premium, we can just return here.
                 if (aPlayer.isPremium()) {
-                    tPlayer.loggedIn();
+                    tPlayer.setLoggedIn(true);
                     return;
                 }
 
                 // If the player is not premium, we can set the player to need auth and return.
-                tPlayer.needsAuth();
+                tPlayer.setNeedAuth(true);
                 event.setResult(PreLoginEvent.PreLoginComponentResult.forceOfflineMode());
             });
             return;
         }
 
         // If the UUID is not present, the player is not premium, needs auth.
-        tPlayer.needsAuth();
+        tPlayer.setNeedAuth(true);
         event.setResult(PreLoginEvent.PreLoginComponentResult.forceOfflineMode());
     }
 
