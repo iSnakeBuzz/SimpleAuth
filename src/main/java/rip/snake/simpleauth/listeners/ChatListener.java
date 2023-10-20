@@ -39,16 +39,11 @@ public class ChatListener {
         TPlayer tPlayer = PlayerManager.GET_TMP_PLAYER(player.getUsername());
 
         if (tPlayer.isNeedAuth() && !tPlayer.isLoggedIn()) {
-            return;
+            String command = event.getCommand().toLowerCase();
+
+            if (command.startsWith("login") || command.startsWith("register")) return;
+            event.setResult(CommandExecuteEvent.CommandResult.denied());
         }
-
-        String command = event.getCommand().toLowerCase();
-
-        if (command.startsWith("login") || command.startsWith("register")) {
-            return;
-        }
-
-        event.setResult(CommandExecuteEvent.CommandResult.denied());
     }
 
 }
