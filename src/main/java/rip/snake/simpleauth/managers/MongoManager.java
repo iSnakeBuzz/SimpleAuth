@@ -55,6 +55,8 @@ public class MongoManager {
             this.mongoClient = MongoClients.create(settings);
             this.simpleAuthDatabase = mongoClient.getDatabase(database);
             this.authPlayerCollection = simpleAuthDatabase.getCollection("auth-players", AuthPlayer.class);
+
+            this.createIndexes();
         } catch (Exception e) {
             simpleAuth.getLogger().error("Failed to connect to MongoDB!", e);
         }
