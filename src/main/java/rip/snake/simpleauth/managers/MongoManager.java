@@ -67,7 +67,8 @@ public class MongoManager {
         IndexOptions unique = new IndexOptions().unique(true);
 
         authPlayerCollection.createIndex(Indexes.text("uniqueId"), unique);
-        authPlayerCollection.createIndex(Indexes.text("username"));
+        authPlayerCollection.createIndex(Indexes.ascending("username"));
+        authPlayerCollection.createIndex(Indexes.descending("username"));
     }
 
     public void disconnect() {
