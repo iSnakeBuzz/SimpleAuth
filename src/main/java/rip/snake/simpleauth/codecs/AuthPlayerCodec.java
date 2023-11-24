@@ -31,9 +31,9 @@ public class AuthPlayerCodec implements Codec<AuthPlayer> {
         writer.writeStartDocument();
         writer.writeString("uniqueId", value.getUniqueId().toString());
         writer.writeString("username", value.getUsername().toLowerCase());
-        writer.writeString("last_server", value.getLast_server());
-        writer.writeString("last_ip", value.getLast_ip());
-        writer.writeInt64("last_login", value.getLast_login());
+        writer.writeString("last_server", value.getLastServer());
+        writer.writeString("last_ip", value.getLastIP());
+        writer.writeInt64("last_login", value.getLastLogin());
         writer.writeString("hashed_password", value.getHashedPassword());
         writer.writeBoolean("isPremium", value.isPremium());
         writer.writeEndDocument();

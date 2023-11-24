@@ -12,9 +12,9 @@ public class AuthPlayer {
     private final String uniqueId;
     private final String username;
 
-    private final String last_server;
-    private final String last_ip;
-    private final long last_login;
+    private final String lastServer;
+    private final String lastIP;
+    private final long lastLogin;
 
     private String hashedPassword;
     private boolean isPremium;
