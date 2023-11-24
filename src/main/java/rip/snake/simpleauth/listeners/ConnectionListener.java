@@ -42,7 +42,7 @@ public class ConnectionListener {
                     uuid.get().toString(),
                     username,
                     "none",
-                    event.getConnection().getRemoteAddress().getHostName(),
+                    event.getConnection().getRemoteAddress().getAddress().getHostAddress(),
                     System.currentTimeMillis(),
                     "none",
                     true
