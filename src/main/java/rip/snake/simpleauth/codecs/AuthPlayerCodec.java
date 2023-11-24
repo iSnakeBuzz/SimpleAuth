@@ -30,7 +30,7 @@ public class AuthPlayerCodec implements Codec<AuthPlayer> {
     public void encode(BsonWriter writer, AuthPlayer value, EncoderContext encoderContext) {
         writer.writeStartDocument();
         writer.writeString("uniqueId", value.getUniqueId().toString());
-        writer.writeString("username", value.getUsername());
+        writer.writeString("username", value.getUsername().toLowerCase());
         writer.writeString("last_server", value.getLast_server());
         writer.writeString("last_ip", value.getLast_ip());
         writer.writeInt64("last_login", value.getLast_login());

@@ -22,7 +22,7 @@ public class ConnectionListener {
     public void onPreLogin(PreLoginEvent event) {
         simpleAuth.getLogger().info(event.getResult().getReasonComponent().toString());
 
-        String username = event.getUsername();
+        String username = event.getUsername().toLowerCase();
         Optional<AuthPlayer> authPlayer = simpleAuth.getMongoManager().fetchUsername(username);
         TPlayer tPlayer = PlayerManager.GET_TMP_PLAYER(username);
 
@@ -78,7 +78,7 @@ public class ConnectionListener {
 
     @Subscribe
     public void onQuit(DisconnectEvent event) {
-        PlayerManager.REMOVE_PLAYER(event.getPlayer().getUniqueId(), event.getPlayer().getUsername());
+        PlayerManager.REMOVE_PLAYER(event.getPlayer().getUniqueId(), event.getPlayer().getUsername().toLowerCase());
     }
 
 }

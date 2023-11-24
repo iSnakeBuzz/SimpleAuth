@@ -86,7 +86,7 @@ public class MongoManager {
     public Optional<AuthPlayer> fetchUsername(String username) {
         if (authPlayerCollection == null) return Optional.empty();
 
-        AuthPlayer authPlayer = authPlayerCollection.find(Filters.eq("username", username)).first();
+        AuthPlayer authPlayer = authPlayerCollection.find(Filters.eq("username", username.toLowerCase())).first();
 
         if (authPlayer != null) {
             PlayerManager.PUT_PLAYER(authPlayer.getUniqueId(), authPlayer);
