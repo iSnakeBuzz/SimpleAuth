@@ -11,6 +11,7 @@ import lombok.Getter;
 import org.slf4j.Logger;
 import rip.snake.simpleauth.commands.LoginCommand;
 import rip.snake.simpleauth.commands.RegisterCommand;
+import rip.snake.simpleauth.listeners.MessagesListener;
 import rip.snake.simpleauth.listeners.ChatListener;
 import rip.snake.simpleauth.listeners.ConnectionListener;
 import rip.snake.simpleauth.listeners.ServerListener;
@@ -59,6 +60,7 @@ public class SimpleAuth {
         proxyServer.getEventManager().register(this, new ChatListener(this));
         proxyServer.getEventManager().register(this, new ServerListener(this));
         proxyServer.getEventManager().register(this, new ConnectionListener(this));
+        proxyServer.getEventManager().register(this, new MessagesListener(this));
 
         // Registering commands
         proxyServer.getCommandManager().register("login", new LoginCommand(this));

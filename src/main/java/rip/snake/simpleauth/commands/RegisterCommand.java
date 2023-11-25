@@ -32,15 +32,23 @@ public class RegisterCommand implements SimpleCommand {
         }
 
         String[] args = invocation.arguments();
-        if (args.length != 2) {
+        if (args.length != 3) {
             invocation.source().sendMessage(MiniMessage.miniMessage().deserialize(
-                    simpleAuth.getMessages().getString("messages.register-usage", "<red>Usage: <yellow>/register <password> <password>")
+                    simpleAuth.getMessages().getString("messages.register-usage", "<red>Usage: <yellow>/register <password> <password> <captcha>")
             ));
             return;
         }
 
         String password = args[0];
         String confirm_password = args[1];
+        String captcha = args[2];
+
+        if (!captcha.equals(tPlayer.getServerCaptcha())) {
+            player.sendMessage(MiniMessage.miniMessage().deserialize(
+                    simpleAuth.getMessages().getString("messages.captcha-failed", "<red>Incorrect captcha!")
+            ));
+            return;
+        }
 
         if (!password.equals(confirm_password)) {
             player.sendMessage(MiniMessage.miniMessage().deserialize(

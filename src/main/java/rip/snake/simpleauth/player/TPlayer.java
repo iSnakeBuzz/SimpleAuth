@@ -10,6 +10,7 @@ public class TPlayer {
 
     private final String username;
 
+    private String serverCaptcha;
     private boolean needAuth;
     private boolean loggedIn;
     private boolean registered;

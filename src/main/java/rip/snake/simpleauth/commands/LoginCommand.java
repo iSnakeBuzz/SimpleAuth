@@ -42,9 +42,9 @@ public class LoginCommand implements SimpleCommand {
             return;
         }
 
-        if (args.length != 1) {
+        if (args.length != 2) {
             player.sendMessage(MiniMessage.miniMessage().deserialize(
-                    simpleAuth.getMessages().getString("messages.login-usage", "<red>Usage: <yellow>/login <password>")
+                    simpleAuth.getMessages().getString("messages.login-usage", "<red>Usage: <yellow>/login <password> <captcha>")
             ));
             return;
         }
@@ -53,6 +53,15 @@ public class LoginCommand implements SimpleCommand {
         ));
 
         String password = args[0];
+        String captcha = args[1];
+
+        if (!captcha.equals(tPlayer.getServerCaptcha())) {
+            player.sendMessage(MiniMessage.miniMessage().deserialize(
+                    simpleAuth.getMessages().getString("messages.captcha-failed", "<red>Incorrect captcha!")
+            ));
+            return;
+        }
+
         boolean verified = PasswordUtils.isPasswordValid(password, authPlayer.getHashedPassword());
 
         if (!verified) {

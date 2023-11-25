@@ -2,6 +2,7 @@ file-version: 1
 
 # Use MiniMessage formatting :)
 messages:
+  captcha-failed: <red>Incorrect captcha!
   not-logged-in: <red>You are not logged in! Please login using <yellow>/login <password>
   not-registered: <red>You are not registered! Please register using <yellow>/register <password> <password>
   register-usage: '<red>Usage: <yellow>/register <password> <password>'
