@@ -4,21 +4,20 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.PluginMessageEvent;
-import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
-import lombok.AllArgsConstructor;
 import rip.snake.simpleauth.SimpleAuth;
 import rip.snake.simpleauth.managers.PlayerManager;
 
-@AllArgsConstructor
 public class MessagesListener {
 
     public static final MinecraftChannelIdentifier IDENTIFIER = MinecraftChannelIdentifier.from("simple-auth:captcha");
     private final SimpleAuth plugin;
 
-    @Subscribe
-    public void onProxyInitialization(ProxyInitializeEvent event) {
+    public MessagesListener(SimpleAuth plugin) {
+        this.plugin = plugin;
+
+        plugin.getLogger().info("Registering plugin message listener...");
         plugin.getProxyServer().getChannelRegistrar().register(IDENTIFIER);
     }
 
