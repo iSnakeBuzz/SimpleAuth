@@ -2,6 +2,7 @@ file-version: 1
 
 # Use MiniMessage formatting :)
 messages:
+  no-lobby-server: <red>There is no lobby server!
   captcha-failed: <red>Incorrect captcha!
   not-logged-in: <red>You are not logged in! Please login using <yellow>/login <password>
   not-registered: <red>You are not registered! Please register using <yellow>/register <password> <password>
@@ -16,3 +17,6 @@ messages:
   too-many-attempts: <red>You have attempted to login too many times!
   already-logged-in: <red>You are already logged in!
   already-registered: <red>You are already registered!
+  change-password-usage: '<red>Usage: <yellow>/changepassword <old password> <new password> <new password>'
+  changing-password: <yellow>Changing password...
+  password-changed: <red>Your password has been changed!
