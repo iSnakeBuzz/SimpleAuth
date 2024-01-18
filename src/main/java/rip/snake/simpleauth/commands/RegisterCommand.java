@@ -81,8 +81,6 @@ public class RegisterCommand implements SimpleCommand {
         ));
 
         simpleAuth.getServersManager().sendLobby(player);
-
-        System.out.println("Register Command Executed with passwords: " + password + " and " + confirm_password);
     }
 
 }

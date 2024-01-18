@@ -85,8 +85,6 @@ public class LoginCommand implements SimpleCommand {
         tPlayer.setLoggedIn(true);
         tPlayer.setRegistered(true);
         simpleAuth.getServersManager().sendLobby(player);
-
-        System.out.println("Login Command Executed with password: " + password);
     }
 
 }
