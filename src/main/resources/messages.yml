@@ -25,3 +25,8 @@ messages:
   unregister-not-registered: <red>This user is not registered!
   unregister-error: <red>An error occurred while unregistering the player.
   kick-message: <red>You have been unregistered by an administrator.
+  resetpass-usage: '<red>Usage: <yellow>/resetpass <username>'
+  resetpass-success: <green>Successfully reset the password for <username>!
+  resetpass-not-registered: <red>This user is not registered!
+  resetpass-error: <red>An error occurred while resetting the password.
+  resetpass-notify: <green>Your password has been reset by an administrator.

@@ -10,7 +10,6 @@ import rip.snake.simpleauth.SimpleAuth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 public class UnregisterCommand implements SimpleCommand {

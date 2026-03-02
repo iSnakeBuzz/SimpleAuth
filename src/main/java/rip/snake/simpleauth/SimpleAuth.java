@@ -69,6 +69,7 @@ public class SimpleAuth {
         proxyServer.getCommandManager().register("changepassword", new ChangePassCommand(this), "changepass", "changepassword");
         proxyServer.getCommandManager().register("lobby", new LobbyCommand(this), "hub", "leave", "l");
         proxyServer.getCommandManager().register("unregister", new UnregisterCommand(this), "removeregister");
+        proxyServer.getCommandManager().register("resetpassword", new ResetPassCommand(this), "resetpass");
 
         // Registering tasks
         proxyServer.getScheduler()
