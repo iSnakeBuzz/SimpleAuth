@@ -95,7 +95,7 @@ public class ConnectionListener {
                     true // isPremium = true
             ));
 
-            tPlayer.setAuthenticated(true);
+            tPlayer.setRegistered(true);
             tPlayer.setLoggedIn(true);
             tPlayer.setNeedAuth(false);
             simpleAuth.getLogger().info("[{}] Verified as REAL premium on first join! Saved to DB.", username);
@@ -104,7 +104,7 @@ public class ConnectionListener {
 
         // Standard logic for already registered players
         if (authPlayerOpt.isPresent() && authPlayerOpt.get().isPremium()) {
-            tPlayer.setAuthenticated(true);
+            tPlayer.setRegistered(true);
             tPlayer.setLoggedIn(true);
             tPlayer.setNeedAuth(false);
             tPlayer.setLastDisconnectTime(0); // Reset in case they had a previous session
@@ -122,7 +122,7 @@ public class ConnectionListener {
             }
 
             // They are offline mode (cracked), need to register/login in auth server.
-            tPlayer.setAuthenticated(false);
+            tPlayer.setRegistered(authPlayerOpt.isPresent());
             tPlayer.setLoggedIn(false);
             tPlayer.setNeedAuth(true);
             simpleAuth.getLogger().info("[{}] The player is not premium or is new, needs auth.", username);

@@ -13,7 +13,7 @@ public class TPlayer {
     private String serverCaptcha;
     private boolean needAuth;
     private boolean loggedIn;
-    private boolean authenticated;
+    private boolean registered;
     private int attempts;
 
     private RegisteredServer server;

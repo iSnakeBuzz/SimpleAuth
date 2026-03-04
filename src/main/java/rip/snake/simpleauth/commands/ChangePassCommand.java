@@ -60,7 +60,7 @@ public class ChangePassCommand implements SimpleCommand {
 
         simpleAuth.getMongoManager().createPlayerOrUpdate(authPlayer);
         tPlayer.setLoggedIn(true);
-        tPlayer.setAuthenticated(true);
+        tPlayer.setRegistered(true);
 
         player.sendMessage(MiniMessage.miniMessage().deserialize(
                 simpleAuth.getMessages().getString("messages.password-changed", "<green>Password changed!")

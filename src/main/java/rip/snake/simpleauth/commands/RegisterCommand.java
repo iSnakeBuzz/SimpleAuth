@@ -24,7 +24,7 @@ public class RegisterCommand implements SimpleCommand {
         Player player = (Player) invocation.source();
         TPlayer tPlayer = PlayerManager.GET_TMP_PLAYER(player.getUsername());
 
-        if (tPlayer.isAuthenticated()) {
+        if (tPlayer.isRegistered()) {
             player.sendMessage(MiniMessage.miniMessage().deserialize(
                     simpleAuth.getMessages().getString("messages.already-registered", "<red>You are already registered!")
             ));
@@ -74,7 +74,7 @@ public class RegisterCommand implements SimpleCommand {
 
         simpleAuth.getMongoManager().createPlayerOrUpdate(authPlayer);
         tPlayer.setLoggedIn(true);
-        tPlayer.setAuthenticated(true);
+        tPlayer.setRegistered(true);
 
         player.sendMessage(MiniMessage.miniMessage().deserialize(
                 simpleAuth.getMessages().getString("messages.register-success", "<green>You have successfully registered!")

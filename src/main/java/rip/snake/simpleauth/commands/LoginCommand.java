@@ -83,7 +83,7 @@ public class LoginCommand implements SimpleCommand {
         ));
 
         tPlayer.setLoggedIn(true);
-        tPlayer.setAuthenticated(true);
+        tPlayer.setRegistered(true);
         simpleAuth.getServersManager().sendLobby(player);
     }
 
