@@ -56,6 +56,7 @@ public class UnregisterCommand implements SimpleCommand {
                     authPlayerOpt.ifPresentOrElse(authPlayer -> {
                         try {
                             simpleAuth.getMongoManager().unregisterPlayer(authPlayer.getUniqueId());
+                            rip.snake.simpleauth.managers.PlayerManager.REMOVE_TMP_PLAYER(targetUsername);
                         } catch (Exception e) {
                             simpleAuth.getLogger().error("Failed to unregister player: {}", targetUsername, e);
                             player.sendMessage(MiniMessage.miniMessage().deserialize(

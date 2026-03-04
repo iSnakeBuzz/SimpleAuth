@@ -22,7 +22,7 @@ public class PlayerManager {
     }
 
     public static void REMOVE_TMP_PLAYER(String username) {
-        TMP_PLAYERS.remove(username);
+        TMP_PLAYERS.remove(username.toLowerCase());
     }
 
     public static void CLEANUP_SESSIONS() {

@@ -92,6 +92,7 @@ public class MongoManager {
     public void unregisterPlayer(UUID uniqueId) {
         if (authPlayerCollection == null) return;
         authPlayerCollection.deleteOne(Filters.eq("uniqueId", uniqueId.toString()));
+        PlayerManager.REMOVE_PLAYER(uniqueId, null);
     }
 
     public Optional<AuthPlayer> fetchUsername(String username) {
