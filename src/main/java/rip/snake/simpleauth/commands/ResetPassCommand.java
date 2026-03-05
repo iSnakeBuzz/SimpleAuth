@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import rip.snake.simpleauth.SimpleAuth;
+import rip.snake.simpleauth.managers.PlayerManager;
 import rip.snake.simpleauth.utils.PasswordUtils;
 
 import java.util.ArrayList;
@@ -50,6 +51,7 @@ public class ResetPassCommand implements SimpleCommand {
                             String hashedPassword = PasswordUtils.hashPassword("12345");
                             authPlayer.setHashedPassword(hashedPassword);
                             simpleAuth.getMongoManager().createPlayerOrUpdate(authPlayer);
+                            PlayerManager.REMOVE_TMP_PLAYER(username);
                         } catch (Exception e) {
                             simpleAuth.getLogger().error("Failed to reset password for player: {}", username, e);
                             invocation.source().sendMessage(MiniMessage.miniMessage().deserialize(
