@@ -15,3 +15,12 @@ servers:
 mongo:
   uri: 'mongodb://localhost:27017'
   database: 'simple-auth'
+
+# Geyser/Floodgate support (optional)
+# This section is only active if the Floodgate plugin is installed on this Velocity proxy.
+# If Floodgate is not present, all settings here are ignored entirely.
+geyser:
+  enabled: true            # Master toggle for Bedrock support
+  auto-bypass-auth: true   # Bedrock players are already authenticated by Xbox Live via Floodgate.
+                           # When true, they skip /login and /register entirely.
+                           # When false, Bedrock players must still authenticate manually (not recommended).

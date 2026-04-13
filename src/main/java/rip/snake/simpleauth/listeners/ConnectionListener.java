@@ -30,6 +30,23 @@ public class ConnectionListener {
     @Subscribe(order = PostOrder.NORMAL)
     public void onPreLogin(PreLoginEvent event) {
         String username = event.getUsername().toLowerCase();
+
+        // --- Bedrock / Geyser early return ---
+        // Floodgate players are authenticated by Xbox Live before reaching this point.
+        // We force offline mode here so Velocity assigns a consistent offline UUID;
+        // Floodgate will then replace it with the correct Bedrock UUID internally.
+        // Note: at PreLogin stage we can only detect Bedrock by the username prefix
+        // since the Player object doesn't exist yet. Full UUID-based detection happens in onLogin.
+        if (simpleAuth.getGeyserSupport().isFloodgatePresent()) {
+            String prefix = getFloodgatePrefix();
+            if (!prefix.isEmpty() && username.startsWith(prefix)) {
+                event.setResult(PreLoginEvent.PreLoginComponentResult.forceOfflineMode());
+                simpleAuth.getLogger().info("[Bedrock] {} detected by prefix at PreLogin. Forcing offline mode for Floodgate.", username);
+                return;
+            }
+        }
+        // --- End Bedrock check ---
+
         Optional<AuthPlayer> authPlayerOpt = simpleAuth.getMongoManager().fetchUsername(username);
 
         // 1. Player is already registered in our database
@@ -57,11 +74,11 @@ public class ConnectionListener {
             }
         }
 
-        // They are new and haven't tried recently. We must check the Mojang API [web:5].
+        // They are new and haven't tried recently. We must check the Mojang API.
         Optional<UUID> uuid = MojangAPI.fetchUsername(username);
 
         if (uuid.isPresent()) {
-            // The name is premium. Force Online Mode to test them [web:5].
+            // The name is premium. Force Online Mode to test them.
             // We add them to our pending map.
             pendingPremiumChecks.put(username, System.currentTimeMillis());
             event.setResult(PreLoginEvent.PreLoginComponentResult.forceOnlineMode());
@@ -79,6 +96,35 @@ public class ConnectionListener {
         Optional<AuthPlayer> authPlayerOpt = simpleAuth.getMongoManager().fetchUsername(username);
         TPlayer tPlayer = PlayerManager.GET_TMP_PLAYER(username);
 
+        // --- Bedrock / Geyser bypass ---
+        // At this point the Player object exists, so we can do a reliable UUID-based check via FloodgateApi.
+        if (simpleAuth.getGeyserSupport().isFloodgatePresent()
+                && simpleAuth.getGeyserSupport().shouldBypassAuth()
+                && simpleAuth.getGeyserSupport().isBedrockPlayer(event.getPlayer())) {
+
+            // Save or update Bedrock player in DB if they are new
+            if (authPlayerOpt.isEmpty()) {
+                simpleAuth.getMongoManager().createPlayerOrUpdate(new AuthPlayer(
+                        event.getPlayer().getUniqueId().toString(),
+                        username,
+                        "none",
+                        event.getPlayer().getRemoteAddress().getAddress().getHostAddress(),
+                        System.currentTimeMillis(),
+                        "none",  // No password — Bedrock players authenticate via Xbox Live
+                        false,   // isPremium (Java sense) = false
+                        true     // isBedrock = true
+                ));
+                simpleAuth.getLogger().info("[Bedrock] {} is a new Bedrock player. Saved to DB.", username);
+            }
+
+            tPlayer.setRegistered(true);
+            tPlayer.setLoggedIn(true);
+            tPlayer.setNeedAuth(false);
+            simpleAuth.getLogger().info("[Bedrock] {} authenticated via Xbox Live (Floodgate). Auth bypassed.", username);
+            return;
+        }
+        // --- End Bedrock bypass ---
+
         // If they reached here and they were in pending, it means they SUCCESSFULLY completed premium auth!
         if (pendingPremiumChecks.containsKey(username)) {
             pendingPremiumChecks.remove(username); // Clean up
@@ -92,7 +138,8 @@ public class ConnectionListener {
                     event.getPlayer().getRemoteAddress().getAddress().getHostAddress(),
                     System.currentTimeMillis(),
                     "none",
-                    true // isPremium = true
+                    true,  // isPremium = true
+                    false  // isBedrock = false
             ));
 
             tPlayer.setRegistered(true);
@@ -133,7 +180,7 @@ public class ConnectionListener {
     public void onQuit(DisconnectEvent event) {
         String username = event.getPlayer().getUsername().toLowerCase();
         simpleAuth.getLogger().info("[{}] Disconnected", username);
-        
+
         // Save session data
         TPlayer tPlayer = PlayerManager.GET_TMP_PLAYER(username);
         if (tPlayer.isLoggedIn()) {
@@ -149,5 +196,21 @@ public class ConnectionListener {
         // Note: We deliberately DO NOT remove them from pendingPremiumChecks here.
         // If a cracked player fails Mojang auth, Velocity kicks them, and we WANT them
         // to stay in the cache so their immediate double-join is recognized as offline.
+    }
+
+    // -------------------------------------------------------------------------
+    // Private helpers
+    // -------------------------------------------------------------------------
+
+    /**
+     * Reads the Floodgate username prefix from Floodgate's own API.
+     * Falls back to "." (the default Floodgate prefix) if the API call fails.
+     */
+    private String getFloodgatePrefix() {
+        try {
+            return org.geysermc.floodgate.api.FloodgateApi.getInstance().getPlayerPrefix();
+        } catch (Exception e) {
+            return ".";
+        }
     }
 }

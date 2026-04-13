@@ -19,6 +19,13 @@ public class AuthPlayer {
     private String hashedPassword;
     private boolean isPremium;
 
+    /**
+     * Whether this player joined via Geyser/Floodgate (Bedrock Edition).
+     * Bedrock players are authenticated by Xbox Live and bypass SimpleAuth.
+     * Defaults to false for all Java players and legacy database entries.
+     */
+    private boolean isBedrock;
+
     public UUID getUniqueId() {
         return UUID.fromString(uniqueId);
     }
