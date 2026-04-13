@@ -21,9 +21,10 @@ public class AuthPlayerCodec implements Codec<AuthPlayer> {
         long last_login = reader.readInt64("last_login");
         String hashed_password = reader.readString("hashed_password");
         boolean isPremium = reader.readBoolean("isPremium");
+        boolean isBedrock = reader.readBoolean("isBedrock");
         reader.readEndDocument();
 
-        return new AuthPlayer(uniqueId, username, last_server, last_ip, last_login, hashed_password, isPremium);
+        return new AuthPlayer(uniqueId, username, last_server, last_ip, last_login, hashed_password, isPremium, isBedrock);
     }
 
     @Override

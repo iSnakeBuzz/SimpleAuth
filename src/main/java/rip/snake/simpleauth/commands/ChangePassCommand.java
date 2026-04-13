@@ -55,6 +55,7 @@ public class ChangePassCommand implements SimpleCommand {
                 player.getRemoteAddress().getAddress().getHostAddress(),
                 System.currentTimeMillis(),
                 hashedPassword,
+                false,
                 false
         );
 
