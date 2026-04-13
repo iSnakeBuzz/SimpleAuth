@@ -18,6 +18,7 @@ import rip.snake.simpleauth.managers.MongoManager;
 import rip.snake.simpleauth.managers.ServersManager;
 import rip.snake.simpleauth.tasks.SessionCleanupTask;
 import rip.snake.simpleauth.utils.ConfigCreator;
+import rip.snake.simpleauth.utils.GeyserSupport;
 
 import java.nio.file.Path;
 import java.util.concurrent.TimeUnit;
@@ -39,6 +40,7 @@ public class SimpleAuth {
     private final ConfigCreator configCreator;
     private final ServersManager serversManager;
     private final MongoManager mongoManager;
+    private GeyserSupport geyserSupport;
 
     @Inject
     public SimpleAuth(ProxyServer server, Logger logger, @DataDirectory Path pluginData) {
@@ -56,6 +58,9 @@ public class SimpleAuth {
         this.configCreator.createConfig();
         this.serversManager.loadServers();
         this.mongoManager.connect();
+
+        // Initialize Geyser/Floodgate support (safe no-op if Floodgate is not installed)
+        this.geyserSupport = new GeyserSupport(this);
 
         // Registering listeners
         proxyServer.getEventManager().register(this, new ChatListener(this));
