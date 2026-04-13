@@ -1,0 +1,99 @@
+name: Auto Release on Version Change
+
+# Triggers on every push to main, but only runs the release job
+# if the version in build.gradle has actually changed.
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'build.gradle'
+
+jobs:
+  check-version:
+    name: Check if version changed
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.extract.outputs.version }}
+      changed: ${{ steps.diff.outputs.changed }}
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2  # Need previous commit to diff
+
+      - name: Extract current version from build.gradle
+        id: extract
+        run: |
+          VERSION=$(grep -m1 "^version" build.gradle | sed "s/version = '\(.*\)'/\1/")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Detected version: $VERSION"
+
+      - name: Check if version line changed vs previous commit
+        id: diff
+        run: |
+          PREV=$(git show HEAD~1:build.gradle 2>/dev/null | grep -m1 "^version" | sed "s/version = '\(.*\)'/\1/" || echo "none")
+          CURR="${{ steps.extract.outputs.version }}"
+          echo "Previous: $PREV | Current: $CURR"
+          if [ "$PREV" != "$CURR" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+  build-and-release:
+    name: Build & Publish Release
+    runs-on: ubuntu-latest
+    needs: check-version
+    if: needs.check-version.outputs.changed == 'true'
+    permissions:
+      contents: write  # Required to create GitHub Releases and upload assets
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Grant execute permission to gradlew
+        run: chmod +x gradlew
+
+      - name: Build shadow jar
+        run: ./gradlew shadowJar --no-daemon
+
+      - name: Locate built jar
+        id: jar
+        run: |
+          JAR_PATH=$(find build/libs -name "*.jar" ! -name "*-plain.jar" | head -1)
+          JAR_NAME=$(basename "$JAR_PATH")
+          echo "path=$JAR_PATH" >> $GITHUB_OUTPUT
+          echo "name=$JAR_NAME" >> $GITHUB_OUTPUT
+          echo "Built jar: $JAR_PATH"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ needs.check-version.outputs.version }}
+          name: SimpleAuth v${{ needs.check-version.outputs.version }}
+          body: |
+            ## SimpleAuth v${{ needs.check-version.outputs.version }}
+
+            Automated release triggered by version bump in `build.gradle`.
+
+            ### Installation
+            1. Download `${{ steps.jar.outputs.name }}` below
+            2. Place it in your Velocity `plugins/` folder
+            3. Restart the proxy
+
+            ---
+            *Built from commit [`${{ github.sha }}`](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})*
+          files: ${{ steps.jar.outputs.path }}
+          draft: false
+          prerelease: ${{ contains(needs.check-version.outputs.version, 'BETA') || contains(needs.check-version.outputs.version, 'SNAPSHOT') || contains(needs.check-version.outputs.version, 'alpha') || contains(needs.check-version.outputs.version, 'RC') }}
+          fail_on_unmatched_files: true
+          make_latest: true
