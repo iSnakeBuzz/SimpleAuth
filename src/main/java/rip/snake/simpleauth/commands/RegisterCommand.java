@@ -69,6 +69,7 @@ public class RegisterCommand implements SimpleCommand {
                 player.getRemoteAddress().getAddress().getHostAddress(),
                 System.currentTimeMillis(),
                 hashedPassword,
+                false,
                 false
         );
 
