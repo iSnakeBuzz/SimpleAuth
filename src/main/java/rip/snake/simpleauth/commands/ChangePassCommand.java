@@ -48,6 +48,9 @@ public class ChangePassCommand implements SimpleCommand {
 
         String hashedPassword = PasswordUtils.hashPassword(password);
 
+        AuthPlayer existing = PlayerManager.GET_PLAYER(player.getUniqueId());
+        long registeredAt = existing != null ? existing.getRegisteredAt() : System.currentTimeMillis();
+
         AuthPlayer authPlayer = new AuthPlayer(
                 player.getUniqueId().toString(),
                 player.getUsername(),
@@ -56,7 +59,8 @@ public class ChangePassCommand implements SimpleCommand {
                 System.currentTimeMillis(),
                 hashedPassword,
                 false,
-                false
+                false,
+                registeredAt
         );
 
         simpleAuth.getMongoManager().createPlayerOrUpdate(authPlayer);

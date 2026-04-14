@@ -112,7 +112,8 @@ public class ConnectionListener {
                         System.currentTimeMillis(),
                         "none",  // No password — Bedrock players authenticate via Xbox Live
                         false,   // isPremium (Java sense) = false
-                        true     // isBedrock = true
+                        true,    // isBedrock = true
+                        System.currentTimeMillis()
                 ));
                 simpleAuth.getLogger().info("[Bedrock] {} is a new Bedrock player. Saved to DB.", username);
             }
@@ -139,7 +140,8 @@ public class ConnectionListener {
                     System.currentTimeMillis(),
                     "none",
                     true,  // isPremium = true
-                    false  // isBedrock = false
+                    false, // isBedrock = false
+                    System.currentTimeMillis()
             ));
 
             tPlayer.setRegistered(true);
