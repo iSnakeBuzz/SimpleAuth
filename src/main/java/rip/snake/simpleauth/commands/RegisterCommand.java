@@ -70,7 +70,8 @@ public class RegisterCommand implements SimpleCommand {
                 System.currentTimeMillis(),
                 hashedPassword,
                 false,
-                false
+                false,
+                System.currentTimeMillis()
         );
 
         simpleAuth.getMongoManager().createPlayerOrUpdate(authPlayer);

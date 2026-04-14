@@ -26,6 +26,8 @@ public class AuthPlayer {
      */
     private boolean isBedrock;
 
+    private long registeredAt;
+
     public UUID getUniqueId() {
         return UUID.fromString(uniqueId);
     }

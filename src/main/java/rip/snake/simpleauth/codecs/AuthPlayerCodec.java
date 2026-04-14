@@ -22,6 +22,7 @@ public class AuthPlayerCodec implements Codec<AuthPlayer> {
         String hashed_password = null;
         boolean isPremium = false;
         boolean isBedrock = false;
+        long registeredAt = 0;
 
         while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
             String name = reader.readName();
@@ -35,12 +36,13 @@ public class AuthPlayerCodec implements Codec<AuthPlayer> {
                 case "hashed_password": hashed_password = reader.readString(); break;
                 case "isPremium":    isPremium = reader.readBoolean(); break;
                 case "isBedrock":    isBedrock = reader.readBoolean(); break;
+                case "registeredAt": registeredAt = reader.readInt64(); break;
                 default:             reader.skipValue(); break;
             }
         }
         reader.readEndDocument();
 
-        return new AuthPlayer(uniqueId, username, last_server, last_ip, last_login, hashed_password, isPremium, isBedrock);
+        return new AuthPlayer(uniqueId, username, last_server, last_ip, last_login, hashed_password, isPremium, isBedrock, registeredAt);
     }
 
     @Override
@@ -54,6 +56,7 @@ public class AuthPlayerCodec implements Codec<AuthPlayer> {
         writer.writeString("hashed_password", value.getHashedPassword());
         writer.writeBoolean("isPremium", value.isPremium());
         writer.writeBoolean("isBedrock", value.isBedrock());
+        writer.writeInt64("registeredAt", value.getRegisteredAt());
         writer.writeEndDocument();
     }
 
